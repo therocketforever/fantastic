@@ -20,20 +20,49 @@ class Application < Sinatra::Base
   end
 end
 
+module Equipable
+  def equip
+    puts "Item Equiped!"
+  end
+end
+
 class Item
   include DataMapper::Resource
-  
+  include Equipable
   property :id, Serial
-
   has n, :inventories, :through => Resource
 end
 
+class EnchantedItem < Item
+end
 
+class Potion < EnchantedItem
+end
+
+class Weapon < Item
+end
+
+class Cutting < Weapon
+end
+
+class Bashing < Weapon
+end
+
+class Sword < Cutting
+end
+
+class Dagger < Cutting
+end
+
+class Mace < Bashing
+end
+
+class Armor < Item
+end
 
 class User
   include DataMapper::Resource
   property :id, Serial
-
   has n, :inventories
   has n, :items, :through => :inventories
 end
@@ -41,7 +70,6 @@ end
 class Inventory
   include DataMapper::Resource
   property :id, Serial
-
   belongs_to :user
   has n, :items, :through => Resource
 end
