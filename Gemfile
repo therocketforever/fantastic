@@ -9,6 +9,7 @@ end
 
 group :development do
   gem "dm-sqlite-adapter"
+  gem "pry"
 end
 
 group :test do
