@@ -39,6 +39,15 @@ end
 class Potion < EnchantedItem
 end
 
+class HealPotion < Potion
+end
+
+class ManaPotion < Potion
+end
+
+class Poison < Potion
+end
+
 class Weapon < Item
 end
 
