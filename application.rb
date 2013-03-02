@@ -24,6 +24,8 @@ class Item
   include DataMapper::Resource
   
   property :id, Serial
+
+  has n, :inventories, :through => Resource
 end
 
 
@@ -32,7 +34,8 @@ class User
   include DataMapper::Resource
   property :id, Serial
 
-  has 1, :inventory
+  has n, :inventories
+  has n, :items, :through => :inventories
 end
 
 class Inventory
@@ -40,6 +43,9 @@ class Inventory
   property :id, Serial
 
   belongs_to :user
+  has n, :items, :through => Resource
 end
 
 DataMapper.finalize.auto_migrate!
+
+Binding.pry
