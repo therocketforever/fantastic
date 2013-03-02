@@ -25,3 +25,21 @@ class Item
   
   property :id, Serial
 end
+
+
+
+class User
+  include DataMapper::Resource
+  property :id, Serial
+
+  has 1, :inventory
+end
+
+class Inventory
+  include DataMapper::Resource
+  property :id, Serial
+
+  belongs_to :user
+end
+
+DataMapper.finalize.auto_migrate!
