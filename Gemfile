@@ -2,6 +2,7 @@ source :rubygems
 
 gem "sinatra"
 gem "data_mapper"
+gem "thin"
 
 group :production do
 end
