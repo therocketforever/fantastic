@@ -26,6 +26,12 @@ module Equipable
   end
 end
 
+module Offensible
+end
+
+module Defensible
+end
+
 class Item
   include DataMapper::Resource
   include Equipable
