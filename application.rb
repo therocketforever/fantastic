@@ -145,6 +145,7 @@ class EnchantedItem < Item
 end
 
 class Potion < EnchantedItem
+  property :magnitude, Integer, :default => 1.d4.roll
   def apply_effect(target)
     self.effect
   end
