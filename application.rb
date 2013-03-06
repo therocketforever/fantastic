@@ -133,7 +133,8 @@ class Item
   property :durability, Decimal, :default => 100.00
   property :material, Enum[:wood, :leather, :iron, :steel, :silver, :gold, :glass, :crystal], :default => :wood
   property :quality, Enum[:common, :uncomon, :rare, :legendary, :unique, :artifact], :default => :common
-  
+  property :modification, Flag[:none, :dense, :Rusty, :fine, :poisoned, :elemental, :cursed, :enchanted, :broken], :default => :none  
+
   has n, :inventories, :through => Resource
 end
 
@@ -177,7 +178,6 @@ class Weapon < Item
   include Offensible
   
   property :damage_type, Flag[:cutting, :bashing, :elemental, :magical]
-  property :modification, Flag[:none, :poisoned, :elemental, :cursed, :enchanted, :broken], :default => :none
 end
 
 class Cutting < Weapon
@@ -198,7 +198,6 @@ end
 class Armor < Item
   include Defensible
   
-  property :modification, Flag[:none, :dense, :rusty, :fine, :broken]
 end
 
 class User
