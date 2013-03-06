@@ -133,9 +133,17 @@ class Item
   property :durability, Decimal, :default => 100.00
   property :material, Enum[:wood, :leather, :iron, :steel, :silver, :gold, :glass, :crystal], :default => :wood
   property :quality, Enum[:common, :uncomon, :rare, :legendary, :unique, :artifact], :default => :common
-  property :modification, Flag[:none, :dense, :Rusty, :fine, :poisoned, :elemental, :cursed, :enchanted, :broken], :default => :none  
+  property :modification, Flag[:none, :dense, :rusty, :fine, :poisoned, :elemental, :cursed, :enchanted, :broken], :default => :none  
 
   has n, :inventories, :through => Resource
+
+  before :save do
+    if self.modification == :enchanted
+      self.class.send(:include, Empowered)
+    elseif self.modification == :none
+      #do nothing
+    end
+  end
 end
 
 class Artifact < Item
