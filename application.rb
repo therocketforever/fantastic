@@ -138,9 +138,9 @@ class Item
   has n, :inventories, :through => Resource
 
   before :save do
-    if self.modification == :enchanted
+    if self.modification.include? :enchanted
       self.class.send(:include, Empowered)
-    elseif self.modification == :none
+    elsif self.modification == :none
       #do nothing
     end
   end
