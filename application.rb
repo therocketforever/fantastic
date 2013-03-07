@@ -129,11 +129,12 @@ class Item
   include Equipable
   
   property :id, Serial
+  property :type, Discriminator
   property :name, String
   property :durability, Decimal, :default => 100.00
-  property :material, Enum[:wood, :leather, :iron, :steel, :silver, :gold, :glass, :crystal], :default => :wood
-  property :quality, Enum[:common, :uncomon, :rare, :legendary, :unique, :artifact], :default => :common
-  property :modification, Flag[:none, :dense, :rusty, :fine, :poisoned, :elemental, :cursed, :enchanted, :broken], :default => :none  
+  property :material, Enum[:Wood, :Leather, :Iron, :Steel, :Silver, :Gold, :Glass, :Crystal], :default => :Glass
+  property :quality, Enum[:Common, :Uncomon, :Rare, :Legendary, :Unique, :Artifact], :default => :Common
+  property :modification, Flag[:none, :Dense, :Rusty, :Fine, :Poisoned, :Elemental, :Cursed, :Enchanted, :Broken], :default => :none  
 
   has n, :inventories, :through => Resource
 
@@ -155,6 +156,7 @@ end
 
 class Potion < EnchantedItem
   property :magnitude, Integer, :default => 1.d4.roll
+  property :kind, Enum[:HealPotion, :ManaPotion, :Poison]
   def apply_effect(target)
     self.effect
   end
@@ -185,13 +187,21 @@ end
 class Weapon < Item
   include Offensible
   
-  property :damage_type, Flag[:cutting, :bashing, :elemental, :magical]
+  property :damage_type, Flag[:Cutting, :Bashing, :Magical, :Elemental]
 end
 
 class Cutting < Weapon
+  property :kind, Enum[:Sword, :Dagger]
 end
 
 class Bashing < Weapon
+  property :kind, Enum[:Mace, :QuarterStaff]
+end
+
+class Magical < Weapon
+end
+
+class Elemental < Magical
 end
 
 class Sword < Cutting
@@ -203,9 +213,27 @@ end
 class Mace < Bashing
 end
 
+class QuarterStaff < Bashing
+end
+
 class Armor < Item
   include Defensible
-  
+  property :kind, Enum[:Cuirass, :Gauntlet, :Glove, :Helm, :Boots]
+end
+
+class Curiass < Armor
+end
+
+class Gauntlet < Armor
+end
+
+class Glove < Armor
+end
+
+class Helm < Armor
+end
+
+class Boots < Armor
 end
 
 class User
