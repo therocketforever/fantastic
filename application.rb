@@ -124,6 +124,29 @@ module Empowered
   end
 end
 
+class DungeonMaster
+  def initialize
+    puts "Why are you instantiating me!? Don't do that!"
+  end
+  
+  def self.random_loot
+    type = [:Gold, :Weapon, :Armor, :Artifact, :EnchantedItem].sample
+    case type
+      when :Weapon
+        Object.const_get(Object.const_get(Weapon.damage_type.options[:flags].sample).kind.options[:flags].sample).new
+      when :Armor
+        puts "Armor!"
+      when :Artifact
+        puts "Artifact!"
+      when :EnchantedItem
+        puts "EnchantedItem!"
+      else
+        puts "GOOOOOOOOOLD!!!"
+        Gold.new
+    end
+  end
+end
+
 class Item
   include DataMapper::Resource
   include Equipable
@@ -132,7 +155,7 @@ class Item
   property :type, Discriminator
   property :name, String
   property :durability, Decimal, :default => 100.00
-  property :material, Enum[:Wood, :Leather, :Iron, :Steel, :Silver, :Gold, :Glass, :Crystal], :default => :Glass
+  property :material, Enum[:Wood, :Leather, :Iron, :Steel, :Silver, :Gold, :Glass, :Crystal], :default => :Wood
   property :quality, Enum[:Common, :Uncomon, :Rare, :Legendary, :Unique, :Artifact], :default => :Common
   property :modification, Flag[:none, :Dense, :Rusty, :Fine, :Poisoned, :Elemental, :Cursed, :Enchanted, :Broken], :default => :none  
 
@@ -144,6 +167,31 @@ class Item
     elsif self.modification == :none
       #do nothing
     end
+  end
+end
+
+class Loot < Item
+  property :kind, Enum[:Gold]
+end
+
+class Gold < Loot
+  property :value, Integer, :default => 1.d20.roll 
+  
+  def how_much_gold?
+    if self.value == 1
+      "A Piece of Gold"
+    elsif (1..10) === self.value 
+      "#{self.value} pieces of gold."
+    elsif self.value > 10
+      "A pile of #{self.value} gold pieces"
+    end
+  end
+  
+  before :save do
+    self.material = :Gold unless self.material
+    self.value = 1.d20.roll unless self.value
+    self.quality = :Uncomon unless self.quality
+    self.name = self.how_much_gold? unless self.name
   end
 end
 
@@ -199,9 +247,11 @@ class Bashing < Weapon
 end
 
 class Magical < Weapon
+  property :kind, Enum[:Wand]
 end
 
 class Elemental < Magical
+  property :kind, Enum[:ElementalSword]
 end
 
 class Sword < Cutting
@@ -214,6 +264,12 @@ class Mace < Bashing
 end
 
 class QuarterStaff < Bashing
+end
+
+class Wand < Magical
+end
+
+class ElementalSword < Elemental
 end
 
 class Armor < Item
